@@ -1,0 +1,39 @@
+#!/bin/bash
+
+#Averigua si es de día o de noche y cambia el tema en consecuencia
+# Debemos instalar jq
+
+# Función para obtener la hora actual en formato HH:MM
+get_time() {
+    date +"%H:%M"
+}
+
+#obtener latitud y longitud, nota estos datos se pueden meter a capon si queremos ser más preciso
+lat=$(curl -s http://ip-api.com/line/?fields=lat)
+long=$(curl -s http://ip-api.com/line/?fields=log)
+
+# Función para obtener la hora de amanecer
+get_sunrise() {
+    curl -s "https://api.sunrise-sunset.org/json?lat=$lat&lng=$long&formatted=0" | jq -r '.results.sunrise' | cut -c 12-16
+}
+
+# Función para obtener la hora de anochecer
+get_sunset() {
+    curl -s "https://api.sunrise-sunset.org/json?lat=$lat&lng=$long&formatted=0" | jq -r '.results.sunset' | cut -c 12-16
+}
+
+# Obtener la hora actual
+current_time=$(get_time)
+
+# Obtener la hora de amanecer y anochecer
+sunrise=$(get_sunrise)
+sunset=$(get_sunset)
+
+# Verificar si es de día o de noche
+if [[ "$current_time" > "$sunrise" && "$current_time" < "$sunset" ]]; then
+    # Es de día, ejecutar el primer comando
+    xfce4-theme-switcher -l day
+else
+    # Es de noche, ejecutar el segundo comando
+    xfce4-theme-switcher -l night
+fi

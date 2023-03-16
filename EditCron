@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# Obtener la latitud y longitud de la ubicación actual
+lat=$(curl -s http://ip-api.com/line/?fields=lat)
+long=$(curl -s http://ip-api.com/line/?fields=log)
+
+# Función para obtener la hora de anochecer, modificar lat y long en base a tu propia ubicación
+get_sunset() {
+    curl -s "https://api.sunrise-sunset.org/json?lat=$lat&lng=$long&formatted=0" | jq -r '.results.sunset' | cut -c 12-16
+}
+sunset_time=$(get_sunset)
+
+#el formato es HH:MM por lo que formateamos dos variables para que puedan entrar en cron
+sunset_hour=$(cut -c 1-2 <<<"$sunset_time")
+sunset_min=$(cut -c 4-5 <<<"$sunset_time")
+
+# Crear la línea que se agregará al archivo crontab
+cron_line="$sunset_min $sunset_hour * * * DayOrNight"
+
+#Borrar crontab anterior !!PELIGRO
+crontab -r
+
+# Agregar la línea al archivo crontab ##funciona, sinceramente no se como que alguien se lo pregunte a chatGPT
+(crontab -l 2>/dev/null; echo "$cron_line") | crontab -
+
+#Comprobación
+echo "La tarea se ha programado para ejecutarse cada día a las $sunset_time."
+crontab -l
+#sudo systemctl restart cronie.service
+
+
+
+
