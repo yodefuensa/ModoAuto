@@ -1,15 +1,17 @@
 #!/bin/bash
+#delay start prevents some scripts NOT from starting
+sleep 5
 
 # Obtener la latitud y longitud de la ubicación actual
 lat=$(curl -s http://ip-api.com/line/?fields=lat)
-long=$(curl -s http://ip-api.com/line/?fields=log)
+long=$(curl -s http://ip-api.com/line/?fields=lon)
 
 # Función para obtener la hora de anochecer, modificar lat y long en base a tu propia ubicación
-get_sunset() {
+get_sunset_utc() {
     curl -s "https://api.sunrise-sunset.org/json?lat=$lat&lng=$long&formatted=0" | jq -r '.results.sunset' | cut -c 12-16
 }
-sunset_time=$(get_sunset)
-
+sunset_time_utc=$(get_sunset_utc)
+sunset_time=$(date -d "$sunset_time_utc UTC" +"%H:%M")
 #el formato es HH:MM por lo que formateamos dos variables para que puedan entrar en cron
 sunset_hour=$(cut -c 1-2 <<<"$sunset_time")
 sunset_min=$(cut -c 4-5 <<<"$sunset_time")
@@ -26,7 +28,7 @@ crontab -r
 #Comprobación
 echo "La tarea se ha programado para ejecutarse cada día a las $sunset_time."
 crontab -l
-#sudo systemctl restart cronie.service
+sudo systemctl restart cronie.service
 
 
 

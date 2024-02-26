@@ -10,15 +10,15 @@ get_time() {
 
 #obtener latitud y longitud, nota estos datos se pueden meter a capon si queremos ser más preciso
 lat=$(curl -s http://ip-api.com/line/?fields=lat)
-long=$(curl -s http://ip-api.com/line/?fields=log)
+long=$(curl -s http://ip-api.com/line/?fields=lon)
 
 # Función para obtener la hora de amanecer
-get_sunrise() {
+get_sunrise_UTC() {
     curl -s "https://api.sunrise-sunset.org/json?lat=$lat&lng=$long&formatted=0" | jq -r '.results.sunrise' | cut -c 12-16
 }
 
 # Función para obtener la hora de anochecer
-get_sunset() {
+get_sunset_UTC() {
     curl -s "https://api.sunrise-sunset.org/json?lat=$lat&lng=$long&formatted=0" | jq -r '.results.sunset' | cut -c 12-16
 }
 
@@ -26,8 +26,15 @@ get_sunset() {
 current_time=$(get_time)
 
 # Obtener la hora de amanecer y anochecer
-sunrise=$(get_sunrise)
-sunset=$(get_sunset)
+sunrise_utc=$(get_sunrise_UTC)
+sunset_utc=$(get_sunset_UTC)
+sunrise=$(date -d "$sunrise_utc UTC" +"%H:%M")
+sunset=$(date -d "$sunset_utc UTC" +"%H:%M")
+
+echo $current_time
+echo $sunset_utc
+echo $sunset
+
 
 # Verificar si es de día o de noche
 if [[ "$current_time" > "$sunrise" && "$current_time" < "$sunset" ]]; then
