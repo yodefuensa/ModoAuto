@@ -1,5 +1,5 @@
 #!/bin/bash
-
+echo "Inicio script DayOrNight" >> /home/jaime/Proyectos/ModoAuto/log.txt
 #Averigua si es de día o de noche y cambia el tema en consecuencia
 # Debemos instalar jq
 
@@ -30,10 +30,6 @@ sunrise_utc=$(get_sunrise_UTC)
 sunset_utc=$(get_sunset_UTC)
 sunrise=$(date -d "$sunrise_utc UTC" +"%H:%M")
 sunset=$(date -d "$sunset_utc UTC" +"%H:%M")
-
-echo $current_time
-echo $sunset_utc
-echo $sunset
 
 
 # Verificar si es de día o de noche

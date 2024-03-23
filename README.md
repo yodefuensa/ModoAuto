@@ -1,25 +1,30 @@
-README.md
+Dependencies:
 
-En un principio la idea es poder usar estos scripts con https://github.com/liamsgotgenes/xfce4-theme-switcher aunque se puede usar para lanzar cualquier orden
-
-Dependencias: 
-jq 
+jq
 https://archlinux.org/packages/community/x86_64/jq/
 https://man.archlinux.org/man/community/jq/jq.1.en
 
-crontab
+cron
 https://wiki.archlinux.org/title/Cron
 https://archlinux.org/packages/?name=cronie
 
+script:
+https://github.com/liamsgotgenes/xfce4-theme-switcher
 
-y de las siguientes apis:
+and the following APIs:
 https://api.sunrise-sunset.org
 https://ip-api.com/
 
-Basta con programar que se ejecuten al inicio de sesión
+Operation: There are 2 scripts:
 
-EditCron llama a DayOrNight por lo que o se espefica la ruta a mano o se guarda en bin ejm /usr/local/bin
+DayOrNight runs one script or another depending on whether it is day or night. In this case, it is executed using "xfce4-theme-switcher" to load 2 themes that we must have previously created. For DayOrNight to work, you must have previously created the "day" and "night" configurations. You can also create your own configurations or replace lines 38 and 41 with whichever you deem appropriate.
 
-BUGS
-Deberia corregir al script para no borrar el resto de tareas programadas
-YEP aun tengo que ampliar el readme y depurar código
+EditCron: Creates a cron file in the shell and user variables, and schedules the execution of DayOrNight at nightfall.
+
+Installation:
+
+    Install xfce4-theme-switcher.
+    Configure the "day" and "night" themes.
+    Install cron on your distribution and enable the service.
+    Copy the DayOrNight and EditCron scripts to /usr/local/bin.
+    Set the scripts to run at login.
