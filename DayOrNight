@@ -1,6 +1,5 @@
 #!/bin/bash
-echo "Inicio script DayOrNight" >> /home/jaime/Proyectos/ModoAuto/log.txt
-#Averigua si es de día o de noche y cambia el tema en consecuencia
+# Averigua si es de día o de noche y cambia el tema en consecuencia
 # Debemos instalar jq
 
 # Función para obtener la hora actual en formato HH:MM

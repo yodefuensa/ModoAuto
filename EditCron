@@ -19,14 +19,16 @@ sunset_hour=$(cut -c 1-2 <<<"$sunset_time")
 sunset_min=$(cut -c 4-5 <<<"$sunset_time")
 
 # Crear la línea que se agregará al archivo crontab
-cron_line="$sunset_min $sunset_hour * * * /usr/local/bin/DayOrNight"
+# nota """DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus""" 
+# La variable DBUS_SESSION_BUS_ADDRESS es necesaria porque los scripts de crontab no se ejecutan como un usuario con sesión iniciada.
+cron_line="$sunset_min $sunset_hour * * * DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus /usr/local/bin/DayOrNight"
 
 # Borrar crontab anterior !!PELIGRO
 crontab -r
 
 # Definir las variables de entorno necesarias
 CONSOLA="SHELL=/bin/bash"
-RUTAS="PATH=usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin"
+RUTAS="PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin"
 HOM="HOME="$HOME
 
 # Obtener el crontab actual y guardarlo en un archivo temporal
