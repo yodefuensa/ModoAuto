@@ -1,30 +1,22 @@
-Dependencies:
+# automatic xfce4 theme switcher
+This project consists of two scripts that allow automatically changing the XFCE4 theme based on whether it's daytime or nighttime.
 
-jq
-https://archlinux.org/packages/community/x86_64/jq/
-https://man.archlinux.org/man/community/jq/jq.1.en
+# Depndencies
+    jq https://archlinux.org/packages/community/x86_64/jq/
+    cron https://wiki.archlinux.org/title/Cron
+    xfce4-theme-switcher https://github.com/liamsgotgenes/xfce4-theme-switcher
 
-cron
-https://wiki.archlinux.org/title/Cron
-https://archlinux.org/packages/?name=cronie
+Additionally, the following APIs are used:
+    Sunrise-Sunset API https://api.sunrise-sunset.org
+    IP-API https://ip-api.com/
 
-script:
-https://github.com/liamsgotgenes/xfce4-theme-switcher
+## Operation
+The DayOrNight script decides whether to execute one script or another based on whether it's daytime or nighttime. In this case, "xfce4-theme-switcher" is used to load two themes that you must have previously created. For DayOrNight to work, you must have previously created the "day" and "night" configurations. You can also create your own themes or replace lines 38 and 41 with your preferences.
+EditCron creates a cron file with the user's shell and variables, and schedules the execution of DayOrNight at sunset.
 
-and the following APIs:
-https://api.sunrise-sunset.org
-https://ip-api.com/
-
-Operation: There are 2 scripts:
-
-DayOrNight runs one script or another depending on whether it is day or night. In this case, it is executed using "xfce4-theme-switcher" to load 2 themes that we must have previously created. For DayOrNight to work, you must have previously created the "day" and "night" configurations. You can also create your own configurations or replace lines 38 and 41 with whichever you deem appropriate.
-
-EditCron: Creates a cron file in the shell and user variables, and schedules the execution of DayOrNight at nightfall.
-
-Installation:
-
-    Install xfce4-theme-switcher.
-    Configure the "day" and "night" themes.
-    Install cron on your distribution and enable the service.
-    Copy the DayOrNight and EditCron scripts to /usr/local/bin.
-    Set the scripts to run at login.
+## Installation
+1.   Install xfce4-theme-switcher.
+2.   Configure the day and night themes.
+3.   Install cron on your distro and enable the service.
+4.   Copy the DayOrNight and EditCron scripts to /usr/local/bin.
+5.   Set the scripts to run on login.
