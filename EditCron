@@ -46,7 +46,7 @@ crontab /tmp/crontab.tmp
 (crontab -l 2>/dev/null; echo "$cron_line") | crontab -
 
 #Comprobación
-echo "La tarea se ha programado para ejecutarse cada día a las $sunset_time."
+notify-send "Sunset at: $sunset_time."
 crontab -l
 
 
