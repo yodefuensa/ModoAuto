@@ -31,8 +31,9 @@ CONSOLA="SHELL=/bin/bash"
 RUTAS="PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin"
 HOM="HOME="$HOME
 
-# Obtener el crontab actual y guardarlo en un archivo temporal
-# crontab -l > /tmp/crontab.tmp
+# En caso de una sesion anterior puede ser que el archivo tmp exista y duplique la cabecera. Nos lo calzamos
+rm /tmp/crontab.tmp
+
 
 # Agregar las nuevas líneas al inicio del archivo temporal
 echo "$CONSOLA" >> /tmp/crontab.tmp
@@ -42,7 +43,7 @@ echo "$HOM" >> /tmp/crontab.tmp
 # Establecer el crontab modificado
 crontab /tmp/crontab.tmp
 
-# Agregar la línea al archivo crontab ##funciona, sinceramente no se como que alguien se lo pregunte a chatGPT
+# Agregar la línea al archivo crontab, puede ser interesante añadir estas lineas si arriba en el codigo si el fichero ya existe.
 (crontab -l 2>/dev/null; echo "$cron_line") | crontab -
 
 #Comprobación
