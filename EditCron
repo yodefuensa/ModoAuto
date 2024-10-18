@@ -10,14 +10,21 @@ long=$(curl -s http://ip-api.com/line/?fields=lon)
 get_sunset_utc() {
     curl -s "https://api.sunrise-sunset.org/json?lat=$lat&lng=$long&formatted=0" | jq -r '.results.sunset' | cut -c 12-16
 }
+get_sunrise_utc() {
+    curl -s "https://api.sunrise-sunset.org/json?lat=$lat&lng=$long&formatted=0" | jq -r '.results.sunrise' | cut -c 12-16
+}
+
 
 sunset_time_utc=$(get_sunset_utc)
 sunset_time=$(date -d "$sunset_time_utc UTC" +"%H:%M")
+sunrise_time_utc=$(get_sunrise_utc)
+sunrise_time=$(date -d "$sunrise_time_utc UTC" +"%H:%M")
 
 # El formato es HH:MM por lo que formateamos dos variables para que puedan entrar en cron
 sunset_hour=$(cut -c 1-2 <<<"$sunset_time")
 sunset_min=$(cut -c 4-5 <<<"$sunset_time")
-
+sunrise_hour=$(cut -c 1-2 <<<"$sunrise_time")
+sunrise_min=$(cut -c 4-5 <<<"$sunrise_time")
 
 # Crear la línea que se agregará al archivo crontab
 # Definir las variables de entorno necesarias
@@ -26,7 +33,9 @@ RUTAS="PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin"
 HOM="HOME="$HOME
 
 # La variable DBUS_SESSION_BUS_ADDRESS es necesaria porque los scripts de crontab no se ejecutan como un usuario con sesión iniciada.
-cron_line="$sunset_min $sunset_hour * * * DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus /usr/local/bin/DayOrNight"
+cron_line_sunset="$sunset_min $sunset_hour * * * DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus /usr/local/bin/DayOrNight"
+cron_line_sunrise="$sunrise_min $sunrise_hour * * * DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus /usr/local/bin/DayOrNight"
+
 
 # Borrar crontab anterior !!PELIGRO
 crontab -r
@@ -39,7 +48,8 @@ rm /tmp/crontab.tmp
 echo "$CONSOLA" >> /tmp/crontab.tmp
 echo "$RUTAS" >> /tmp/crontab.tmp
 echo "$HOM" >> /tmp/crontab.tmp
-echo "$cron_line" >> /tmp/crontab.tmp
+echo "$cron_line_sunset" >> /tmp/crontab.tmp
+echo "$cron_line_sunrise" >> /tmp/crontab.tmp
 
 # Establecer el crontab modificado
 crontab /tmp/crontab.tmp
@@ -49,6 +59,7 @@ crontab /tmp/crontab.tmp
 
 #Comprobación
 notify-send "Sunset at: $sunset_time."
+notify-send "Sunrise at: $sunrise_time."
 crontab -l
 
 
