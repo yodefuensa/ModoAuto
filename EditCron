@@ -83,4 +83,5 @@ crontab /tmp/crontab.tmp
 #Comprobación
 notify-send "Sunset at: $sunset"
 notify-send "Sunrise at: $sunrise_hour_format:$sunrise_min_format"
+
 crontab -l

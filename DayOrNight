@@ -35,9 +35,9 @@ sunset=$(date -d "$sunset_utc UTC" +"%H:%M")
 if [[ "$current_time" > "$sunrise" && "$current_time" < "$sunset" ]]; then
     # Es de día, ejecutar el primer comando
     xfce4-theme-switcher -l day
-    notify-send "applying the day theme"
+    notify-send "☀️ Modo día activado" "Horario actual: $current_time"
 else
     # Es de noche, ejecutar el segundo comando
     xfce4-theme-switcher -l night
-    notify-send "applying the night theme"
+    notify-send "🌙 Modo noche activado" "Horario actual: $current_time"
 fi
